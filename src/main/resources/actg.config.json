@@ -1,0 +1,24 @@
+{
+    "algos": [{
+        "cipherMode": "ECB",
+        "tokenRealm": "realm1.com",
+        "securityKey": "realm1-secret-key"
+    }, {
+        "cipherMode": "CBC",
+        "tokenRealm": "realm2.com",
+        "securityKey": "realm2-secret-key"
+    }],
+    "identifiers": [{
+        "identifier": "tokenized-without-landingpage",
+        "tokenRealm": "realm1.com",
+        "accountId": "user1@domain.com",
+        "from": "anonymous@invalid.com",
+        "to": "user1@domain.com"
+    }, {
+        "identifier": "tokenized-with-landingpage",
+        "tokenRealm": "realm2.com",
+        "accountId": "user2@domain.com",
+        "from": "anonymous@invalid.com",
+        "to": "user2@domain.com"
+    }]
+}
