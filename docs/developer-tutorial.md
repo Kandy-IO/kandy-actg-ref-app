@@ -45,6 +45,20 @@ Using the Security Key and Cipher that have been configured for the Token Realm 
 
 The Web Page C2C app then uses these encrypted parameters and Token Realm identifier in the token-based anonymous call origination into the Kandy Link. Upon receiving a token-based anonymous call, the Kandy Link decrypts the parameters using the Security Key and Cipher associated with the Token Realm, and then passes the call into the Kandy Link service logic for processing.
 
+The ACTG reference app is actually a web-service that does not have a landing/fallback page as of now. So if you try to visit the [http://your.actg-server.url/actg/](http://your.actg-server.url/actg/) on web browser then you may get the *404* error message but that doesn't mean the service is not running, in fact the service would work as intended if you call the web service via JavaScript (see next section).
+
+The HTTP GET of API `/actg/token/?identifier=<any_token_identifier_defined_on_configuration_file>`, returns the tokens.
+
+This web service can be requested using the CURL cli tool using this command
+
+```bash
+curl http://your.actg-server.url/actg/token/?identifier=tokenized-with-landingpage
+```
+
+or, on a web browser access the web service URL
+
+<img src="assets/access-actg-webservice-on-browser.png">
+
 #### 1.1.1.1. Anonymous Call Token Structure 
 
 The Anonymous Call Token Generator reference app generates the *Account*, *From*, and *To* tokens with the following token structure where the timestamp is used to make the generated tokens as time limited.
@@ -85,7 +99,7 @@ private CustomReponse aesECB(String userId, String fromEmail, String toEmail, St
 }
 ```
 
-##### 1.1.1.1.1. AES-CBC Token Structure 
+##### 1.1.1.1.2. AES-CBC Token Structure 
 
     <token> =  HEX (HMACIVciphertext) 
     <ciphertext> = AES-256-CBC (<Account>;x-ts=<timestamp>) 
@@ -192,7 +206,7 @@ private CustomReponse aesCBC(String userId, String fromEmail, String toEmail, St
 }
 ```
 
-###### 1.1.1.1.1.1. Initialization Vector (IV)
+###### 1.1.1.1.2.1. Initialization Vector (IV)
 
 **IV** is used decode ciphertext by Kandy Link. In this way, Kandy Link will be used to verify the plaintext. It must be alphanumeric `[a-zA-Z0-9]` and 16 characters long.
 
@@ -215,7 +229,7 @@ protected String generateIV() {
 }
 ```
 
-###### 1.1.1.1.1.2. Ciphertext
+###### 1.1.1.1.2.2. Ciphertext
 
     <ciphertext> = AES-256-CBC (username@domain.com;x-ts=timestamp) 
 
@@ -234,7 +248,7 @@ for (LinkedHashMap map : kandyModel.algos) {
 String cipherAccount = encryptAesCbc(userId + ";x-ts=" + timestamp, localSecurityKey, localIv);
 ```
 
-###### 1.1.1.1.1.3. HMAC
+###### 1.1.1.1.2.3. HMAC
 
 There are 2 input to generate **HMAC**. (IVCiphertext) and SecretKey should be used as input parameters. SHA-256 is used as encryption algorithm also. **HMAC**(HEX) output must be 64 characters if you use SHA-256.
 
@@ -260,7 +274,9 @@ Under this directory you will notice the following standard project structure.
 ├── LICENSE
 ├── README.md
 ├── docs
-│   └── developer-tutorial.md
+│   ├── assets
+│   │   └── access-actg-webservice-on-browser.png
+│   └── developer-tutorial.md
 ├── pom.xml
 ├── src
 │    └── main
